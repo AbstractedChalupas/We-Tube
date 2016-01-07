@@ -4,4 +4,8 @@ app.config(function($routeProvider){
 			templateUrl: "stream/stream.html",
 			controller: "streamController",
 		})
+		.when("/login", {
+			templateUrl: "auth/login.html",
+			controller: "AuthController"
+		})
 })

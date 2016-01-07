@@ -14,6 +14,11 @@ var PORT = 8001;
 app.use(express.static(__dirname+"/../client"));
 
 
+app.post('/api/oauth/google', function (req, res) {
+	console.log('reached the server');
+  res.end('HELLO WORLD')
+})
+
 app.listen(PORT);
 
 module.exports = app;
