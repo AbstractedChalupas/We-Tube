@@ -4,6 +4,7 @@
   "description": "Abastracted-chalupas app.",
   "main": "server.js",
   "scripts": {
+    "postinstall": "bower install --allow-root",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -39,7 +40,6 @@
     "bluebird": "^3.1.1",
     "body-parser": "^1.14.2",
     "express": "^4.13.3",
-    "gulp": "^3.9.0",
     "mongoose": "^4.3.4",
     "node": "0.0.0",
     "nodemon": "^1.8.1",
