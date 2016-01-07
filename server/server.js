@@ -19,10 +19,12 @@ io.on('connection', function (socket) {
                'startSeconds': 5,
                'endSeconds': 60,
                'suggestedQuality': 'large'});
-  // socket.on('my other event', function (data) {
-  //   console.log(data);
-  // });
 });
+
+app.post('/api/oauth/google', function (req, res) {
+	console.log('reached the server');
+  res.end('HELLO WORLD')
+})
 
 
 module.exports = app;
