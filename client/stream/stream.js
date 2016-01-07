@@ -1,14 +1,13 @@
 app.controller('streamController', function($scope){
 	$scope.hello = "hello I'm a stream controller"
 	$scope.embed = "https://www.youtube.com/embed/"
+	$scope.startTime = 120;
+
 	$scope.submitUrl = function(url){
 		url = url.split("v=")
-		$scope.embed += url[1]
+		$scope.embed += url[1] + "?autoplay=1"
+		if($scope.startTime){
+			$scope.embed += "&start=" + $scope.startTime 
+		}
 	}
-	// $scope.isURL = true;
-	// https://www.youtube.com/watch?v=KehZYh0a6lk
-	// "https://www.youtube.com/embed/KehZYh0a6lk"
-	// $scope.URL = function(){
-	// 	$scope.isURL = false;
-	// }
 })
