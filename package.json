@@ -1,0 +1,22 @@
+{
+  "name": "abstracted-chalupas",
+  "version": "1.0.0",
+  "description": "Abastracted-chalupas app.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbstractedChalupas/AbstractedChalupas.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AbstractedChalupas/AbstractedChalupas/issues"
+  },
+  "homepage": "https://github.com/AbstractedChalupas/AbstractedChalupas#readme",
+  "dependencies": {
+    "gulp": "^3.9.0"
+  }
+}
