@@ -1,3 +1,3 @@
 app.controller('streamController', function($scope){
-	$scope.hello = "hello"
+	$scope.hello = "hello I'm a stream controller"
 })
