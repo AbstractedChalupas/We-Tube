@@ -35,10 +35,14 @@
   },
   "homepage": "https://github.com/AbstractedChalupas/AbstractedChalupas#readme",
   "dependencies": {
+    "bcrypt": "^0.8.5",
+    "bluebird": "^3.1.1",
     "body-parser": "^1.14.2",
     "express": "^4.13.3",
     "gulp": "^3.9.0",
+    "mongoose": "^4.3.4",
     "node": "0.0.0",
-    "nodemon": "^1.8.1"
+    "nodemon": "^1.8.1",
+    "passport": "^0.3.2"
   }
 }
