@@ -8,15 +8,19 @@
 	<h1>Greenfield</h1>
 	<div ng-view></div>
 	<div ng-controller = 'appController'>{{hello}}</div>
+
+
+
+
 	<!-- dependancy scripts -->
 	<script src = "lib/angular/angular.js"></script>
 	<script src = "lib/angular-route/angular-route.js"></script>
 
 	<!-- local scripts -->
+	<script src="http://localhost:8001/socket.io/socket.io.js">
+	<script src = "stream/stream.js"></script>
+	<script src = "services/services.js"></script>
 	<script src = "app.js"></script>
 	<script src = "appRoutes.js"></script>
-	<script src = "services/services.js"></script>
-	<script src = "stream/stream.js"></script>
-
 </body>
 </html>
