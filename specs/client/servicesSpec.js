@@ -1,7 +1,7 @@
 'use strict';
 
 describe('Services', function () {
-  beforeEach(module('shortly.services'));
+  beforeEach(module('services'));
 
   afterEach(inject(function ($httpBackend) {
     $httpBackend.verifyNoOutstandingExpectation();
@@ -9,63 +9,61 @@ describe('Services', function () {
   }));
 
 
-  describe('Links Factory', function () {
-    var $httpBackend, Links;
+  describe('OAuth Factory', function () {
+    var $httpBackend, OAuth;
 
-    beforeEach(inject(function (_$httpBackend_, _Links_) {
+    beforeEach(inject(function (_$httpBackend_, _OAuth_) {
       $httpBackend = _$httpBackend_;
-      Links = _Links_;
+      OAuth = _OAuth_;
     }));
 
     it('should exist', function () {
-      expect(Links).to.exist;
+      expect(OAuth).to.exist;
     });
 
-    it('should have a method `getAll`', function () {
-      expect(Links.getAll).to.be.a('function');
+    it('should have a method `googleLogin`', function () {
+      expect(OAuth.googleLogin).to.be.a('function');
     });
 
-    it('should have a method `addOne`', function () {
-      expect(Links.addOne).to.be.a('function');
-    });
+    xit('should return an object `googleLogin`', function () {
+      var data = undefined;
+      var mockResponse = undefined;
+      $httpBackend.expect('POST', '/api/links').respond(mockResponse);
 
-    it('should get all links with `getAll`', function () {
-      var mockResponse = [
-        { title: 'Twitter',
-          url: 'https://twitter.com' },
-        { title: 'Reddit',
-          url: 'https://reddit.com/r/javascript' }
-      ];
-
-      $httpBackend.expect('GET', '/api/links').respond(mockResponse);
-
-      Links.getAll().then(function (links) {
-        expect(links).to.deep.equal(mockResponse);
+      OAuth.googleLogin(data).then(function (response) {
+        expect(response).to.deep.equal(mockResponse);
       });
 
       $httpBackend.flush();
     });
-
-    it('should add a new link with `addOne`', function () {
-      var github = { url: 'https://github.com/hackreactor-labs' };
-
-      $httpBackend
-        .expect('POST', '/api/links', JSON.stringify(github))
-        .respond(201, {
-          url: 'https://github.com/hackreactor-labs',
-          title: 'Hack Reactor Labs'
-        });
-
-      Links.addOne(github).then(function (resp) {
-        expect(resp.status).to.equal(201);
-        expect(resp.data.title).to.equal('Hack Reactor Labs');
-      });
-
-      $httpBackend.flush();
-    });
-
   });
 
+  describe('getVideo Factory', function () {
+    var $httpBackend, getVideo;
+
+    beforeEach(inject(function (_$httpBackend_, _getVideo_) {
+      $httpBackend = _$httpBackend_;
+      getVideo = _getVideo_;
+    }));
+
+    it('should exist', function () {
+      expect(getVideo).to.exist;
+    });
+
+    it('should have a method `videoDetails`', function () {
+      expect(getVideo.videoDetails).to.be.a('function');
+    });
+
+    xit('should return an object `videoDetails`', function () {
+      //some sort of object, don't have details on it's structure yet
+      var mockResponse = undefined;
+      $httpBackend.expect('POST', '/api/links').respond(mockResponse);
+
+      getVideo.videoDetails(function (response) {
+        expect(response).to.deep.equal(mockResponse);
+      });
+
+      $httpBackend.flush();
+    });    
+  });
 });
-
-

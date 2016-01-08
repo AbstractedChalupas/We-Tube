@@ -16,15 +16,20 @@ module.exports = function (config) {
       'client/lib/angular-route/angular-route.js',
       'client/lib/angular-mocks/angular-mocks.js',
 
+      //io.source
+      "http://localhost:8001/socket.io/socket.io.js",
       // our app code
-      'client/app/**/*.js',
+      'client/services/*.js',
+      'client/auth/*.js',
+      'client/stream/*.js',
+      'client/*.js',
 
-      // our spec files - in order of the README
-      'specs/client/authControllerSpec.js',
+      // our spec files 
+      'specs/client/appControllerSpec.js',
+      'specs/client/streamControllerSpec.js',
       'specs/client/servicesSpec.js',
-      'specs/client/linksControllerSpec.js',
-      'specs/client/shortenControllerSpec.js',
-      'specs/client/routingSpec.js'
+      //need to add
+      // 'specs/client/routingSpec.js'
     ],
 
     // test results reporter to use
