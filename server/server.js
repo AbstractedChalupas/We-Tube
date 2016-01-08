@@ -2,17 +2,17 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var passport = require('passport');
-var cors = require('cors')
+var cors = require('cors');
 var GoogleStrategy = require('passport-google-oauth2').Strategy;
+var passport = require('passport');
 
-// app.use(cors);
+
+// "1082022701969-rdl6108k798kf2apth302dcuornld9pg.apps.googleusercontent.com"
 
 /* GOOGLE AUTHENTICATION */
 
-var GOOGLE_CLIENT_ID = "241499985652-hiocda659j1b9sk5tfpnjajfn04o1hqh.apps.googleusercontent.com";
-var GOOGLE_CLIENT_SECRET = "FAB9lOKRaVKFgSsw0VysIj5q";
-
+var GOOGLE_CLIENT_ID = "1082022701969-rdl6108k798kf2apth302dcuornld9pg";
+var GOOGLE_CLIENT_SECRET = "rf5SxZAdcpha9sNXcN-QD3uq";
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -25,18 +25,19 @@ passport.deserializeUser(function(obj, done) {
 passport.use(new GoogleStrategy({
   clientID: GOOGLE_CLIENT_ID,
   clientSecret: GOOGLE_CLIENT_SECRET,
-  callbackURL: '/auth/google/callback',
-  passReqToCallback: true
+  callbackURL: "http://127.0.0.1:8001/auth/google/callback",
+  passReqtoCallback: true
 },
 function (request, accessToken, refreshToken, profile, done) {
   process.nextTick(function() {
     return done(null, profile);
   });
-}));
-
-app.use(passport.initialize());
-app.use(passport.session());
+}
+));
 app.use(cors());
+
+app.use( passport.initialize());
+app.use( passport.session());
 
 
 
@@ -48,6 +49,10 @@ var PORT = 8001;
 
 var io = require('socket.io').listen(app.listen(PORT));
 
+
+
+
+
 app.use(express.static(__dirname+"/../client"));
 
 io.on('connection', function (socket) {
@@ -58,15 +63,16 @@ io.on('connection', function (socket) {
                'suggestedQuality': 'large'});
 });
 
-app.get('/auth/google', passport.authenticate('google', { scope: [
-       'https://www.googleapis.com/auth/plus.login',
-       'https://www.googleapis.com/auth/plus.profile.emails.read'] 
+app.get('/auth/google', passport.authenticate('google', {scope: [
+        'https://www.googleapis.com/auth/plus.login',
+        'https://www.googleapis.com/auth/plus.profile.emails.read']
 }));
 
-app.get( '/auth/google/callback', 
-      passport.authenticate( 'google', { 
-        successRedirect: '/',
-        failureRedirect: '/login'
+
+app.get('/auth/google/callback',
+        passport.authenticate( 'google', {
+          successRedirect: '/',
+          failureRedirect: '/login'
 }));
 
 
