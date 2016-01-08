@@ -14,7 +14,9 @@ var io = require('socket.io').listen(app.listen(PORT));
 app.use(express.static(__dirname+"/../client"));
 
 io.on('connection', function (socket) {
-  console.log('client connected');
+  var connectedClients = [];
+  connectedClients.push(socket);
+  //console.log('client connected', connectedClients);
   socket.emit('playerDetails', {'videoId': 'TRrL5j3MIvo',
                'startSeconds': 5,
                'endSeconds': 60,
@@ -23,7 +25,8 @@ io.on('connection', function (socket) {
     console.log(data);
   });
   socket.on('clientPlayerStateChange', function(data) {
-    console.log(data);
+    console.log('client changed state!, server broadcast', data.stateChange);
+    io.emit('serverStateChange', data.stateChange);
   });
 });
 

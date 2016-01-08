@@ -34,6 +34,16 @@ angular.module('services', [])
 					});
 				}, 1000);
 			});
+			socket.on('serverChangeState', function(data) {
+				console.log('server changed my state', data.currentState);
+				if (data.currentState === 2) {
+					$window.youtubePlayer.pauseVideo();
+				}
+				if (data.currentState === 1) {
+					$window.youtubePlayer.playVideo();
+			}
+				//$window.youtubePlayer.setPlayerState(data.currentState);
+			})
 		};
 
 		var setupPlayer = function() {
@@ -61,29 +71,6 @@ angular.module('services', [])
 				});
 			});
 		};
-		// 		player = new YT.Player('player', {
-		// 	  height: '390',
-		// 	  width: '640',
-		// 	  videoId: 'M7lc1UVf-VE',
-		// 	  events: {
-		// 	    'onReady': onPlayerReady,
-		// 	    'onStateChange': onPlayerStateChange
-		// 	   }
-		// 	 });
-		// 	}
-		// 	function onPlayerReady(event) {
-		// 		event.target.playVideo();
-		// 	}
-		// 	function onPlayerStateChange(event) {
-		// 		// if (event.data == YT.PlayerState.PLAYING && !done) {
-		// 	 //  	setTimeout(stopVideo, 6000);
-		// 	 //    done = true;
-		// 	 //  }
-		// 	}
-		// 	function stopVideo() {
-		// 		player.stopVideo();
-		// 	}
-		// };
 
 		return {
 			videoDetails: videoDetails,
