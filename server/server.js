@@ -14,11 +14,20 @@ var io = require('socket.io').listen(app.listen(PORT));
 app.use(express.static(__dirname+"/../client"));
 
 io.on('connection', function (socket) {
-  console.log('client connected');
-  socket.emit('playerDetails', {'videoId': 'bHQqvYy5KYo',
+  var connectedClients = [];
+  connectedClients.push(socket);
+  //console.log('client connected', connectedClients);
+  socket.emit('playerDetails', {'videoId': 'TRrL5j3MIvo',
                'startSeconds': 5,
                'endSeconds': 60,
                'suggestedQuality': 'large'});
+  socket.on('clientPlayer', function (data) {
+    console.log(data);
+  });
+  socket.on('clientPlayerStateChange', function(data) {
+    console.log('client changed state!, server broadcast', data.stateChange);
+    io.emit('serverStateChange', data.stateChange);
+  });
 });
 
 app.post('/api/oauth/google', function (req, res) {
