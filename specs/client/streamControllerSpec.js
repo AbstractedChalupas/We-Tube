@@ -24,9 +24,9 @@ describe('streamController module', function () {
     };
   }));
 
-  it('should have a embed property on the $scope', function () {
+  it('should have a videoId property on the $scope', function () {
     createController();
-    expect($scope.embed).to.be.a('string');
+    expect($scope.videoId).to.be.a('string');
   });
 
   it('should have a method submitUrl', function(){
@@ -34,24 +34,14 @@ describe('streamController module', function () {
     expect($scope.submitUrl).to.be.a('function')
   });
 
-  it('should modify the embed variable when submitUrl is called', function(){
+  it('should modify the videoId variable when submitUrl is called', function(){
     createController();
     $scope.startTime = 0;
     //this is a tempory fix, must be changed later
-    var data = ".comv=data"
-    var modifiedEmbed = $scope.embed + "data" + "?autoplay=1"
+    var data = "https://www.youtube.com/watch?v=5if-d-JhRKc"
+    var modifiedVideoId = "5if-d-JhRKc"
     $scope.submitUrl(data);
-    expect($scope.embed).to.equal(modifiedEmbed)
-  })
-
-  it('should add a start time to the embed variable when startTime is present', function(){
-    createController();
-    $scope.startTime = 120;
-    //this is a tempory fix, must be changed later
-    var data = ".comv=data"
-    var modifiedEmbed = $scope.embed + "data?autoplay=1&start=120"
-    $scope.submitUrl(data);
-    expect($scope.embed).to.equal(modifiedEmbed)
+    expect($scope.videoId).to.equal(modifiedVideoId)
   })
 
 });

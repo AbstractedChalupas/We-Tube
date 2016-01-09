@@ -18,6 +18,8 @@ angular.module('services', [])
 	})
 
 	.factory('getVideo', function ($window, $interval) {
+		//initially set to empty
+
 
 		var videoDetails = function (cb) {
 			$window.socket = io.connect('http://localhost:8001');
@@ -44,25 +46,37 @@ angular.module('services', [])
 			})
 		};
 
-		var setupPlayer = function() {
-			var tag = document.createElement('script');
-			tag.src = "https://www.youtube.com/iframe_api";
-			var firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-		};
 
 		var onYoutubeStateChange = function() {
 			console.log('state change!')
 			socket.emit('clientPlayerStateChange', {stateChange: $window.youtubePlayer.getPlayerState()});
 		};
 
+
+		var videoUrl = '';
+		var setupPlayer = function(source) {
+			if(source){
+				videoUrl = source
+			}
+
+			// add source to the io stream
+			
+			var tag = document.createElement('script');
+			tag.src = "https://www.youtube.com/iframe_api";
+			var firstScriptTag = document.getElementsByTagName('script')[0];
+			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+		};
+
 		$window.onYouTubeIframeAPIReady=function() {
 			console.log('youtube iFrame ready!');
 			videoDetails(function(data) {
+				//checks if it is a submited url or one from socket.io
+				videoId = videoId || data.videoId
 				$window.youtubePlayer = new YT.Player('player', {
 					height: '400',
 					width: '600',
-					videoId: data.videoId,
+					videoId: videoUrl || data.videoId,
 					events: {
 						'onStateChange': onYoutubeStateChange
 					}
@@ -72,6 +86,6 @@ angular.module('services', [])
 
 		return {
 			videoDetails: videoDetails,
-			setupPlayer: setupPlayer
+			setupPlayer: setupPlayer,
 		};
 	})
