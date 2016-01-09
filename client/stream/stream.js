@@ -4,6 +4,10 @@ angular.module('stream', [])
 		$scope.videoId = "";
 		$scope.startTime = 120;
 
+		$scope.clearUrl = function(){
+			$scope.url = ''
+		}
+
 		$scope.submitUrl = function(url){
 			url = url.split("v=")
 			//grabs the youtube video id
@@ -11,6 +15,7 @@ angular.module('stream', [])
 			getVideo.setupPlayer($scope.videoId)			
 		};
 
+		getVideo.setupPlayer()
 		//add in a function later to handle if they are jumping
 		//in on a stream
 	})

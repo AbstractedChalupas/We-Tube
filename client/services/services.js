@@ -19,7 +19,6 @@ angular.module('services', [])
 
 	.factory('getVideo', function ($window, $interval) {
 		//initially set to empty
-		var videoUrl = '';
 
 
 		var videoDetails = function (cb) {
@@ -47,16 +46,6 @@ angular.module('services', [])
 			})
 		};
 
-		var setupPlayer = function(source) {
-			if(source){
-				videoUrl = source
-			}
-			var tag = document.createElement('script');
-			tag.src = "https://www.youtube.com/iframe_api";
-			var firstScriptTag = document.getElementsByTagName('script')[0];
-			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-		};
 
 		var onYoutubeStateChange = function() {
 			console.log('state change!')
@@ -64,8 +53,22 @@ angular.module('services', [])
 		};
 
 
+		var videoUrl = '';
+		var setupPlayer = function(source) {
+			if(source){
+				videoUrl = source
+			}
 
-		$window.onYouTubeIframeAPIReady=function(videoId) {
+			// add source to the io stream
+			
+			var tag = document.createElement('script');
+			tag.src = "https://www.youtube.com/iframe_api";
+			var firstScriptTag = document.getElementsByTagName('script')[0];
+			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+		};
+
+		$window.onYouTubeIframeAPIReady=function() {
 			console.log('youtube iFrame ready!');
 			videoDetails(function(data) {
 				//checks if it is a submited url or one from socket.io
