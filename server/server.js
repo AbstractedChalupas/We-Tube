@@ -30,6 +30,7 @@ passport.use(new GoogleStrategy({
 },
 function (request, accessToken, refreshToken, profile, done) {
   process.nextTick(function() {
+    console.log(profile);
     return done(null, profile);
   });
 }
@@ -80,9 +81,11 @@ app.get('/auth/google', passport.authenticate('google', {scope: [
 
 app.get('/auth/google/callback',
         passport.authenticate( 'google', {
-          successRedirect: '/',
+          successRedirect: '/successRedirect',
           failureRedirect: '/login'
 }));
+
+
 
 
 module.exports = app;
