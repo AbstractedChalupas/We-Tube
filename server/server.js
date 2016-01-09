@@ -5,6 +5,10 @@ var mongoose = require('mongoose');
 var cors = require('cors');
 var GoogleStrategy = require('passport-google-oauth2').Strategy;
 var passport = require('passport');
+var session = require('express-session')
+var User = require('../DB/users/userModel')
+
+app.use(session({secret: "nyan", cookie: {}, resave: false, saveUninitialized: false }));
 
 
 // "1082022701969-rdl6108k798kf2apth302dcuornld9pg.apps.googleusercontent.com"
@@ -14,11 +18,18 @@ var passport = require('passport');
 var GOOGLE_CLIENT_ID = "1082022701969-rdl6108k798kf2apth302dcuornld9pg";
 var GOOGLE_CLIENT_SECRET = "rf5SxZAdcpha9sNXcN-QD3uq";
 
+
+// identify which property defines user
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
 
+
+//find using one proprety in the schema 
 passport.deserializeUser(function(obj, done) {
+  // var userRecord = mongoose query for user based on obj
+  // if error, then call done(err);
+  //obj should be the user record plucked from database
   done(null, obj);
 });
 
@@ -30,8 +41,25 @@ passport.use(new GoogleStrategy({
 },
 function (request, accessToken, refreshToken, profile, done) {
   process.nextTick(function() {
-    console.log(profile);
-    return done(null, profile);
+    console.log(profile.id)
+    // check for users in database here, if the database doesnt have that user, add them as a usermodel in mongo
+    User.findOne({'id':profile.id}, function (err, record){
+      if (err){
+        return err;
+      }
+      if (record) {
+        return done(null, record); 
+      }
+      else {
+        record = {'id': profile.id, 'username': profile.name.givenName}
+        User.create(record, function (err, record) {
+          if (err) {
+            throw err;
+          }
+          return done(null, record);
+        })
+      }
+    });
   });
 }
 ));
@@ -81,11 +109,18 @@ app.get('/auth/google', passport.authenticate('google', {scope: [
 
 app.get('/auth/google/callback',
         passport.authenticate( 'google', {
-          successRedirect: '/successRedirect',
+          successRedirect: '/',
           failureRedirect: '/login'
 }));
 
-
+var checkUser = function (req, res, next) {
+  if (req.isAuthenticated()){
+    next();
+  }
+  else {
+    res.redirect('/#login');
+  }
+};
 
 
 module.exports = app;
