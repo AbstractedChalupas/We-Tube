@@ -32,12 +32,12 @@ angular.module('services', [])
 					});
 				}, 1000);
 			});
-			socket.on('serverChangeState', function(data) {
-				console.log('server changed my state', data.currentState);
-				if (data.currentState === 2) {
+			socket.on('serverStateChange', function(data) {
+				console.log('server changed my state', data);
+				if (data === 2) {
 					$window.youtubePlayer.pauseVideo();
 				}
-				if (data.currentState === 1) {
+				if (data === 1) {
 					$window.youtubePlayer.playVideo();
 			}
 				//$window.youtubePlayer.setPlayerState(data.currentState);

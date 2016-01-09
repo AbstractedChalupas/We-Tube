@@ -68,7 +68,7 @@ io.on('connection', function (socket) {
   });
   socket.on('clientPlayerStateChange', function(data) {
     console.log('client changed state!, server broadcast', data.stateChange);
-    io.emit('serverStateChange', data.stateChange);
+    socket.broadcast.emit('serverStateChange', data.stateChange);
   });
 });
 
