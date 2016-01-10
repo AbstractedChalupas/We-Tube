@@ -12,8 +12,12 @@ angular.module('stream', [])
 			url = url.split("v=")
 			//grabs the youtube video id
 			$scope.videoId += url[1] 
-			getVideo.setupPlayer($scope.videoId)			
+			getVideo.setupPlayer($scope.videoId, true)			
 		};
+
+		$scope.joinStream = function(videoId){
+			getVideo.setupPlayer(videoId, false)
+		}
 
 		// getVideo.setupPlayer()
 		//add in a function later to handle if they are jumping
