@@ -4,9 +4,12 @@ app.config(function($routeProvider, $sceDelegateProvider){
 			templateUrl: "stream/stream.html",
 			controller: "StreamController"
 		})
-		.when("/login", {
+		.when("/", {
 			templateUrl: "auth/login.html",
 			controller: "AuthController"
+		})
+		.otherwise({
+			redirectTo: '/'
 		})
 
 	$sceDelegateProvider.resourceUrlWhitelist([

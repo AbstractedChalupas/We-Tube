@@ -19,9 +19,9 @@ var GOOGLE_CLIENT_ID = "1082022701969-rdl6108k798kf2apth302dcuornld9pg";
 var GOOGLE_CLIENT_SECRET = "rf5SxZAdcpha9sNXcN-QD3uq";
 
 
-// identify which property defines user
+// identify which property defines user. this is the users google id which is a number
 passport.serializeUser(function(user, done) {
-  done(null, user);
+  done(null, user.id);
 });
 
 
@@ -30,7 +30,12 @@ passport.deserializeUser(function(obj, done) {
   // var userRecord = mongoose query for user based on obj
   // if error, then call done(err);
   //obj should be the user record plucked from database
-  done(null, obj);
+  User.findOne({'id': obj},function (err, record) {
+    if (err) {
+      return err;
+    }
+    return done(null, record);
+  })
 });
 
 passport.use(new GoogleStrategy({
@@ -47,6 +52,7 @@ function (request, accessToken, refreshToken, profile, done) {
       if (err){
         return err;
       }
+      // if the record exists and is found, return it
       if (record) {
         return done(null, record); 
       }
