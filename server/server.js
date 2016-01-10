@@ -8,7 +8,7 @@ var passport = require('passport');
 var session = require('express-session')
 var User = require('../DB/users/userModel')
 
-app.use(session({secret: "nyan", cookie: {}, resave: false, saveUninitialized: false }));
+app.use(session({secret: "abstractedChalupas", cookie: {}, resave: false, saveUninitialized: false }));
 
 
 // "1082022701969-rdl6108k798kf2apth302dcuornld9pg.apps.googleusercontent.com"
@@ -21,21 +21,16 @@ var GOOGLE_CLIENT_SECRET = "rf5SxZAdcpha9sNXcN-QD3uq";
 
 // identify which property defines user. this is the users google id which is a number
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+  done(null, user);
 });
 
 
 //find using one proprety in the schema 
-passport.deserializeUser(function(obj, done) {
+passport.deserializeUser(function(user, done) {
   // var userRecord = mongoose query for user based on obj
   // if error, then call done(err);
   //obj should be the user record plucked from database
-  User.findOne({'id': obj},function (err, record) {
-    if (err) {
-      return err;
-    }
-    return done(null, record);
-  })
+  done(null, user);
 });
 
 passport.use(new GoogleStrategy({
@@ -46,7 +41,6 @@ passport.use(new GoogleStrategy({
 },
 function (request, accessToken, refreshToken, profile, done) {
   process.nextTick(function() {
-    console.log(profile.id)
     // check for users in database here, if the database doesnt have that user, add them as a usermodel in mongo
     User.findOne({'id':profile.id}, function (err, record){
       if (err){
@@ -107,6 +101,15 @@ io.on('connection', function (socket) {
   });
 });
 
+app.get('/api/loggedin', function (req, res) {
+  var auth = req.isAuthenticated();
+  if (auth) {
+    res.send(req.user);
+  }
+  else
+    res.send('0');
+})
+
 app.get('/auth/google', passport.authenticate('google', {scope: [
         'https://www.googleapis.com/auth/plus.login',
         'https://www.googleapis.com/auth/plus.profile.emails.read']
@@ -115,18 +118,18 @@ app.get('/auth/google', passport.authenticate('google', {scope: [
 
 app.get('/auth/google/callback',
         passport.authenticate( 'google', {
-          successRedirect: '/',
-          failureRedirect: '/login'
+          successRedirect: '/#/stream',
+          failureRedirect: '/#/login'
 }));
 
-var checkUser = function (req, res, next) {
-  if (req.isAuthenticated()){
-    next();
-  }
-  else {
-    res.redirect('/#login');
-  }
-};
+// var checkUser = function (req, res, next) {
+//   if (req.isAuthenticated()){
+//     next();
+//   }
+//   else {
+//     res.redirect('/#login');
+//   }
+// };
 
 
 module.exports = app;
