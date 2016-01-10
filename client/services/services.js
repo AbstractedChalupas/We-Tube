@@ -53,7 +53,7 @@ angular.module('services', [])
 		};
 
 
-		var videoUrl = '';
+		var videoId = '';
 		var setupPlayer = function(source) {
 			if(source){
 				videoUrl = source
