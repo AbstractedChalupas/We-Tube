@@ -12,11 +12,11 @@ angular.module('stream', [])
 			url = url.split("v=")
 			//grabs the youtube video id
 			$scope.videoId += url[1] 
-			getVideo.setupPlayer($scope.videoId)			
+			getVideo.setupPlayer($scope.videoId, true)			
 		};
 
 		$scope.joinStream = function(videoId){
-			getVideo.setupPlayer(videoId)
+			getVideo.setupPlayer(videoId, false)
 		}
 
 		// getVideo.setupPlayer()

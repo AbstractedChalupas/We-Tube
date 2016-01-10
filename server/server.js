@@ -94,13 +94,20 @@ io.on('connection', function (socket) {
   var connectedClients = [];
   connectedClients.push(socket);
   //console.log('client connected', connectedClients);
+  // socket.emit('playerDetails', {'videoId': 'TRrL5j3MIvo',
+  //              'startSeconds': 5,
+  //              'endSeconds': 60,
+  //              'suggestedQuality': 'large'});
   socket.emit('playerDetails', {'videoId': 'TRrL5j3MIvo',
-               'startSeconds': 5,
-               'endSeconds': 60,
-               'suggestedQuality': 'large'});
-  socket.on('clientPlayer', function (data) {
+             'startSeconds': 5,
+             'endSeconds': 60,
+             'suggestedQuality': 'large'});
+  
+  socket.on('hostPlayer', function (data) {
     console.log(data);
+    socket.broadcast.emit('hostPlayerSync', data)
   });
+
   socket.on('clientPlayerStateChange', function(data) {
     console.log('client changed state!, server broadcast', data.stateChange);
     socket.broadcast.emit('serverStateChange', data.stateChange);

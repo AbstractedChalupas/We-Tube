@@ -18,44 +18,17 @@ angular.module('services', [])
 	})
 
 	.factory('getVideo', function ($window, $interval) {
-		//initially set to empty
-
-
-		var videoDetails = function (cb) {
-			$window.socket = io.connect('http://localhost:8001');
-			socket.on('playerDetails', function (data) {
-				console.log('socket data', data);
-				cb(data);
-				console.log('player', $window.youtubePlayer);
-
-				$interval(function() {
-					socket.emit('clientPlayer', {	currentTime: $window.youtubePlayer.getCurrentTime(),
-																				currentState: $window.youtubePlayer.getPlayerState()
-					});
-				}, 1000);
-			});
-			socket.on('serverStateChange', function(data) {
-				console.log('server changed my state', data);
-				if (data === 2) {
-					$window.youtubePlayer.pauseVideo();
-				}
-				if (data === 1) {
-					$window.youtubePlayer.playVideo();
-			}
-				//$window.youtubePlayer.setPlayerState(data.currentState);
-			})
-		};
-
-
 		var onYoutubeStateChange = function() {
 			console.log('state change!')
 			socket.emit('clientPlayerStateChange', {stateChange: $window.youtubePlayer.getPlayerState()});
 		};
 
+		var host= false;
+		var videoId = '';
 
-		var setupPlayer = function(source) {
+		var setupPlayer = function(source, isHost) {
 			videoId = source
-
+			host = isHost;
 			// add source to the io stream
 			
 			var tag = document.createElement('script');
@@ -67,23 +40,39 @@ angular.module('services', [])
 		//updated by setupPlayer b/c setupPlayer cannot directly pass into
 		//onYouTubeIframeAPIReady
 		
-		var videoId = '';
 		$window.onYouTubeIframeAPIReady=function() {
 			console.log('youtube iFrame ready!');
-			videoDetails(function(data) {
-				$window.youtubePlayer = new YT.Player('player', {
-					height: '400',
-					width: '600',
-					videoId: videoId,
-					events: {
-						'onStateChange': onYoutubeStateChange
-					}
+			$window.youtubePlayer = new YT.Player('player', {
+				height: '400',
+				width: '600',
+				videoId: videoId,
+				events: {
+					'onStateChange': onYoutubeStateChange
+				}
 				});
-			});
-		};
+
+				//if possible make async at some point this and the above
+				$window.socket = io.connect('http://localhost:8001');
+				if(host){
+					$interval(function() {
+						socket.emit('hostPlayer', {	currentTime: $window.youtubePlayer.getCurrentTime(),
+																					currentState: $window.youtubePlayer.getPlayerState()
+						});
+					}, 1000);
+				}
+
+				socket.on('serverStateChange', function(data) {
+					console.log('server changed my state', data);
+					if (data === 2) {
+						$window.youtubePlayer.pauseVideo();
+					}
+					if (data === 1) {
+						$window.youtubePlayer.playVideo();
+					}
+				});			
+			};
 
 		return {
-			videoDetails: videoDetails,
 			setupPlayer: setupPlayer,
 		};
 	})
