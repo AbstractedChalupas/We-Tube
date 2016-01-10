@@ -69,8 +69,16 @@ angular.module('services', [])
 					if (data === 1) {
 						$window.youtubePlayer.playVideo();
 					}
-				});			
+				});
+
+				if(!host){
+					socket.on("hostPlayerSync", function(data){
+						console.log(data)
+						$window.youtubePlayer.seekTo(data.currentTime)
+					})
+				}			
 			};
+
 
 		return {
 			setupPlayer: setupPlayer,
