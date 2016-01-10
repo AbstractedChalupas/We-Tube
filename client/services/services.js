@@ -53,11 +53,8 @@ angular.module('services', [])
 		};
 
 
-		var videoId = '';
 		var setupPlayer = function(source) {
-			if(source){
-				videoUrl = source
-			}
+			videoId = source
 
 			// add source to the io stream
 			
@@ -67,16 +64,17 @@ angular.module('services', [])
 			firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
 		};
-
+		//updated by setupPlayer b/c setupPlayer cannot directly pass into
+		//onYouTubeIframeAPIReady
+		
+		var videoId = '';
 		$window.onYouTubeIframeAPIReady=function() {
 			console.log('youtube iFrame ready!');
 			videoDetails(function(data) {
-				//checks if it is a submited url or one from socket.io
-				videoId = videoId || data.videoId
 				$window.youtubePlayer = new YT.Player('player', {
 					height: '400',
 					width: '600',
-					videoId: videoUrl || data.videoId,
+					videoId: videoId,
 					events: {
 						'onStateChange': onYoutubeStateChange
 					}

@@ -15,6 +15,10 @@ angular.module('stream', [])
 			getVideo.setupPlayer($scope.videoId)			
 		};
 
+		$scope.joinStream = function(videoId){
+			getVideo.setupPlayer(videoId)
+		}
+
 		// getVideo.setupPlayer()
 		//add in a function later to handle if they are jumping
 		//in on a stream
