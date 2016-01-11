@@ -17,7 +17,7 @@ app.use(session({secret: "abstractedChalupas", cookie: {}, resave: false, saveUn
 
 var GOOGLE_CLIENT_ID = "1082022701969-rdl6108k798kf2apth302dcuornld9pg";
 var GOOGLE_CLIENT_SECRET = "rf5SxZAdcpha9sNXcN-QD3uq";
-
+var rooms = [];
 
 // identify which property defines user. this is the users google id which is a number
 passport.serializeUser(function(user, done) {
@@ -99,6 +99,11 @@ io.on('connection', function (socket) {
              'endSeconds': 60,
              'suggestedQuality': 'large'});
 
+  socket.on('createRoom', function(data){
+    rooms.push(data.room)
+    console.log("creating room", rooms)
+  })
+
   //on hearing this event the server return sync data to all viewers
   socket.on('hostPlayerState', function (data) {
     console.log(data);
@@ -142,6 +147,9 @@ app.get('/auth/google', passport.authenticate('google', {scope: [
         'https://www.googleapis.com/auth/plus.profile.emails.read']
 }));
 
+app.get('/streams/rooms', function(req, res){
+  res.send(rooms)
+})
 
 app.get('/auth/google/callback',
         passport.authenticate( 'google', {

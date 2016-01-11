@@ -55,6 +55,9 @@ angular.module('services', [])
 			//sets up the socket stream and events
 			$window.socket = io.connect('http://localhost:8001');
 			if(host){
+				
+				socket.emit('createRoom',{room : videoId})
+
 				$interval(function() {
 					//emits an event to the server
 					socket.emit('hostPlayerState', {	currentTime: $window.youtubePlayer.getCurrentTime(),

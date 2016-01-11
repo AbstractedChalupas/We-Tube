@@ -1,18 +1,27 @@
 angular.module('stream', [])
-<<<<<<< HEAD
-	.controller('StreamController', function ($scope, getVideo, $http) {
-		$scope.hello = "hello I'm a stream controller";
-=======
-	.controller('StreamController', function ($scope, getVideo) {
->>>>>>> got messages to transfer, strange error on viewer side where they don't load new messages untill they start to type
+	.controller('StreamController', function ($scope, $http, getVideo) {
 		$scope.videoId = "";
 		$scope.startTime = 120;
-		$scope.messages = [];
+		$scope.messages = getVideo.messages;
+		$scope.rooms = [];
 		// [{user:"Bob", message: "hello"}]
 
 		$scope.clearUrl = function(){
 			$scope.url = ''
-		}
+		};
+
+		$scope.getRooms = function(){
+			// $scope.rooms = ['U0315DUM6Cg']
+			console.log("getting rooms")
+			$http({
+				method : "GET",
+				url : "/streams/rooms"
+			}).then(function(rooms) {
+				$scope.rooms = rooms.data
+     	}, function(error) {
+       console.log("Error finding rooms",error);
+			});
+		};
 
 		$scope.submitUrl = function(url){
 			url = url.split("v=")
@@ -21,7 +30,6 @@ angular.module('stream', [])
 			//pass in true since they are the host
 			getVideo.setupPlayer($scope.videoId, true)			
 			$scope.user = "Bob"
-			$scope.messages = getVideo.messages;
 		};
 		$scope.logout = function() {
 			return $http({
@@ -34,7 +42,6 @@ angular.module('stream', [])
 			//pass in false since they are a viewer
 			getVideo.setupPlayer(videoId, false)
 			$scope.user = "Not Bob"
-			$scope.messages = getVideo.messages;
 		}
 
 		$scope.submitMessage = function(keyCode){
