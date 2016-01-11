@@ -2,13 +2,10 @@
 	<div ng-init = "getRooms()" ng-show = "!inRoom">
 		<input ng-model = "url"></input>
 		<button ng-click = "inRoom = !inRoom; submitUrl(url);">Submit</button>
-<<<<<<< HEAD
 		<p ng-click = "inRoom = !inRoom; joinStream('U0315DUM6Cg')">Click me</p>
 		<a href='/api/logout'>Logout of Google</a>
-=======
-		<p ng-repeat = "room in rooms" ng-click = "$parent.inRoom = !$parent.inRoom; joinStream(room)">{{room}} Click me</p>
+		<p ng-repeat = "room in rooms" ng-click = "$parent.inRoom = !$parent.inRoom; joinStream(room)">{{room}} No! Click me</p>
 
->>>>>>> added ability to add rooms to server, and list on client, still need to be able to navigate to different rooms
 	</div>
 
 	<!-- where the player getts -->
