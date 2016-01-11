@@ -92,13 +92,6 @@ var io = require('socket.io').listen(app.listen(PORT));
 app.use(express.static(__dirname+"/../client"));
 
 io.on('connection', function (socket) {
-  var connectedClients = [];
-  connectedClients.push(socket);
-  socket.emit('playerDetails', {'videoId': 'TRrL5j3MIvo',
-             'startSeconds': 5,
-             'endSeconds': 60,
-             'suggestedQuality': 'large'});
-
   socket.on('createRoom', function(data) {
     rooms.push(data.room);
     console.log("creating room", rooms);
