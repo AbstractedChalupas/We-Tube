@@ -2,10 +2,10 @@
 	<div ng-init = "getRooms()" ng-show = "!inRoom">
 		<input ng-model = "url"></input>
 		<button ng-click = "inRoom = !inRoom; submitUrl(url);">Submit</button>
-		<a href='/api/logout'>Logout of Google</a>
 		<p ng-repeat = "room in rooms" ng-click = "$parent.inRoom = !$parent.inRoom; joinStream(room)">{{room}} No! Click me</p>
 
 	</div>
+	<a href='/api/logout'>Logout of Google</a>
 
 	<!-- where the player gets added -->
   <div id="player"></div>

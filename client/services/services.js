@@ -14,22 +14,6 @@ angular.module('services', [])
 
 	.factory('getVideo', function ($window, $interval, $rootScope) {
 
-		var onYoutubeStateChange = function() {
-			console.log('state change!')
-
-			socket.emit('clientPlayerStateChange', {
-				stateChange: $window.youtubePlayer.getPlayerState(),
-				room: videoId
-			});
-
-			if(host){
-				socket.emit('hostPlayerState',
-				{
-					currentTime: $window.youtubePlayer.getCurrentTime(),
-					currentState: $window.youtubePlayer.getPlayerState()
-				});
-			}
-		};
 
 		var host = false;
 		var videoId = '';
@@ -57,6 +41,8 @@ angular.module('services', [])
 				width: '600',
 				videoId: videoId,
 				events: {
+					//calls onYoutubeStateChange when it recieves a 
+					//state change from the server
 					'onStateChange': onYoutubeStateChange
 				}
 			});
@@ -64,19 +50,26 @@ angular.module('services', [])
 			//sets up the socket stream and events
 			$window.socket = io.connect('http://localhost:8001');
 			if(host){
-
 				socket.emit('createRoom',{room : videoId});
-
-				$interval(function() {
-					//emits an event to the server
-					socket.emit('hostPlayerState', {
-						currentTime: $window.youtubePlayer.getCurrentTime(),
-						currentState: $window.youtubePlayer.getPlayerState(),
-						room: videoId
-					});
-				}, 1000);
 			}
+		};
 
+		var onYoutubeStateChange = function() {
+			console.log('state change!')
+
+			socket.emit('clientPlayerStateChange', {
+				stateChange: $window.youtubePlayer.getPlayerState(),
+				room: videoId
+			});
+
+			if(host){
+				socket.emit('hostPlayerState',
+				{
+					currentTime: $window.youtubePlayer.getCurrentTime(),
+					currentState: $window.youtubePlayer.getPlayerState(),
+					room : videoId
+				});
+			}
 			//makes the viewers synch to the host whenever the host emits a time event
 			//recieves this event from the server when the server hears the hostPlayerState
 			//even
@@ -102,7 +95,7 @@ angular.module('services', [])
 			socket.on('newMessage', function(data) {
 				console.log("message Recieved", data)
 				messages.unshift({user : data.user, message : data.message, "userImage" : data.userImage})
-				//force the scope to update, solved a strange error where
+				// force the scope to update, solved a strange error where
 				//viewer messages weren't updating
 				$rootScope.$apply()
 				console.log($rootScope.user)
@@ -117,7 +110,7 @@ angular.module('services', [])
 			var userImage = $rootScope.user.photo
 			//since our socket only currently sends to people who did
 			//not brodcast we need to add the message to our messages array
-			messages.unshift({"user" : username, "message" : message, "userImage" : userImage})
+			// messages.unshift({"user" : username, "message" : message, "userImage" : userImage})
 
 			socket.emit('newMessage', {
 				"user" : username,
