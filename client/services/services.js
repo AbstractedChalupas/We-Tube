@@ -101,7 +101,7 @@ angular.module('services', [])
 			//all users should be listening for and sending messages
 			socket.on('newMessage', function(data) {
 				console.log("message Recieved", data)
-				messages.unshift({user : data.user, message : data.message, "userImage" : data.userImage})
+				// messages.unshift({user : data.user, message : data.message, "userImage" : data.userImage})
 				//force the scope to update, solved a strange error where
 				//viewer messages weren't updating
 				$rootScope.$apply()
