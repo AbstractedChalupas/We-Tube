@@ -1,5 +1,17 @@
-<div> 
-	<!-- <form ng-submit = 'post()' -->
-    <a href = '/auth/google'>Login with Google!</a>
-  <!-- </form> -->
+<div > 
+  <div md-content >
+    <div flex="50" flex-sm="75" flex-xs="75">
+      <md-card layout='column' layout-align ='center center'>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Sign in with Google</span>
+            <!-- <span class="md-subhead">Large</span> -->
+          </md-card-title-text>
+        </md-card-title>
+          <md-button class="md-raised md-primary" ng-href='/auth/google' flex ='25'>
+            Sign In
+          </md-button>
+      </md-card>
+    </div>
+  </div>
 </div>
