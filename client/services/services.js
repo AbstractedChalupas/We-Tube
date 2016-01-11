@@ -31,7 +31,7 @@ angular.module('services', [])
 			}
 		};
 
-		var host = false;
+		var host = false; 
 		var videoId = '';
 		var messages = [];
 
