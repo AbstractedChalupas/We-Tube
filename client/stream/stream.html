@@ -15,7 +15,16 @@
 
 		<input class = "messanger" ng-model = "message" ng-keyup="submitMessage($event.keyCode)"></input>
 
-		<p ng-repeat = "message in messages">{{message.user}} says: {{message.message}}</p>
+		<div ng-repeat = "message in messages">
+
+			<span>
+				<img ng-src="{{message.userImage}}"></img>
+			</span>
+
+			<span>
+				{{message.user}} says: {{message.message}}
+			</span>
+		</div>
 	</div>
 	  
   <script>

@@ -84,7 +84,7 @@ angular.module('services', [])
 			//all users should be listening for and sending messages
 			socket.on('newMessage', function(data) {
 				console.log("message Recieved", data)
-				messages.unshift({user : data.user, message : data.message})
+				messages.unshift({user : data.user, message : data.message, "userImage" : data.userImage})
 				//force the scope to update, solved a strange error where
 				//viewer messages weren't updating
 				$rootScope.$apply()
@@ -99,8 +99,8 @@ angular.module('services', [])
 			var userImage = $rootScope.user.photo
 			//since our socket only currently sends to people who did
 			//not brodcast we need to add the message to our messages array
-			messages.unshift({"user" : username, "message" : message})
-			socket.emit('newMessage', {"user" : username, "message" : message});
+			messages.unshift({"user" : username, "message" : message, "userImage" : userImage})
+			socket.emit('newMessage', {"user" : username, "message" : message, "userImage" : userImage});
 		}
 
 
