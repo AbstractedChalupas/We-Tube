@@ -21,7 +21,7 @@ var GOOGLE_CLIENT_SECRET = "rf5SxZAdcpha9sNXcN-QD3uq";
 
 // identify which property defines user. this is the users google id which is a number
 passport.serializeUser(function(user, done) {
-  done(null, user);
+  done(null, user.id);
 });
 
 
@@ -30,7 +30,13 @@ passport.deserializeUser(function(user, done) {
   // var userRecord = mongoose query for user based on obj
   // if error, then call done(err);
   //obj should be the user record plucked from database
-  done(null, user);
+  User.findOne({'id': user},function(err, record) {
+    if (err) {
+      return err;
+    }
+    done(null, record);
+  })
+  // done(null, user);
 });
 
 passport.use(new GoogleStrategy({
@@ -41,6 +47,7 @@ passport.use(new GoogleStrategy({
 },
 function (request, accessToken, refreshToken, profile, done) {
   process.nextTick(function() {
+    console.log(profile);
     // check for users in database here, if the database doesnt have that user, add them as a usermodel in mongo
     User.findOne({'id':profile.id}, function (err, record){
       if (err){
@@ -51,7 +58,7 @@ function (request, accessToken, refreshToken, profile, done) {
         return done(null, record); 
       }
       else {
-        record = {'id': profile.id, 'username': profile.name.givenName}
+        record = {'id': profile.id, 'username': profile.name.givenName, 'email': profile.email}
         User.create(record, function (err, record) {
           if (err) {
             throw err;
@@ -104,11 +111,25 @@ io.on('connection', function (socket) {
 app.get('/api/loggedin', function (req, res) {
   var auth = req.isAuthenticated();
   if (auth) {
+    console.log(req.user)
     res.send(req.user);
   }
   else
     res.send('0');
 })
+
+app.get('/api/logout', function (req, res) {
+  req.logout();
+  // req.session.destroy(function(err){ 
+    res.redirect('/#stream');
+  // });
+})
+
+
+// app.get('/api/logout', function (req, res) {
+//   app.use(cors());
+//   res.redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8001');
+// })
 
 app.get('/auth/google', passport.authenticate('google', {scope: [
         'https://www.googleapis.com/auth/plus.login',
