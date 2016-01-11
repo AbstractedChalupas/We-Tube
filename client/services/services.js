@@ -16,12 +16,17 @@ angular.module('services', [])
 
 		var onYoutubeStateChange = function() {
 			console.log('state change!')
-			socket.emit('clientPlayerStateChange', {stateChange: $window.youtubePlayer.getPlayerState()});
+
+			socket.emit('clientPlayerStateChange', {
+				stateChange: $window.youtubePlayer.getPlayerState(),
+				room: videoId
+			});
+
 			if(host){
-				socket.emit('hostPlayerState', 
+				socket.emit('hostPlayerState',
 				{
 					currentTime: $window.youtubePlayer.getCurrentTime(),
-					currentState: $window.youtubePlayer.getPlayerState()					
+					currentState: $window.youtubePlayer.getPlayerState()
 				});
 			}
 		};
@@ -35,7 +40,7 @@ angular.module('services', [])
 			videoId = source
 			host = isHost;
 			// add source to the io stream
-			
+
 			var tag = document.createElement('script');
 			tag.src = "https://www.youtube.com/iframe_api";
 			var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -44,6 +49,7 @@ angular.module('services', [])
 		};
 		//updated by setupPlayer b/c setupPlayer cannot directly pass into
 		//onYouTubeIframeAPIReady
+
 		$window.onYouTubeIframeAPIReady=function() {
 			console.log('youtube iFrame ready!');
 			$window.youtubePlayer = new YT.Player('player', {
@@ -58,14 +64,25 @@ angular.module('services', [])
 			//sets up the socket stream and events
 			$window.socket = io.connect('http://localhost:8001');
 			if(host){
-				//creates the room if they are the host
-				socket.emit('createRoom',{room : videoId})
+
+				socket.emit('createRoom',{room : videoId});
+
+				$interval(function() {
+					//emits an event to the server
+					socket.emit('hostPlayerState', {
+						currentTime: $window.youtubePlayer.getCurrentTime(),
+						currentState: $window.youtubePlayer.getPlayerState(),
+						room: videoId
+					});
+				}, 1000);
 			}
-		
+
 			//makes the viewers synch to the host whenever the host emits a time event
 			//recieves this event from the server when the server hears the hostPlayerState
 			//even
 			if(!host){
+				socket.emit ('joinRoom', {room: videoId});
+
 				socket.on("hostPlayerSync", function(data){
 					console.log(data)
 					$window.youtubePlayer.seekTo(data.currentTime)
@@ -88,7 +105,8 @@ angular.module('services', [])
 				//force the scope to update, solved a strange error where
 				//viewer messages weren't updating
 				$rootScope.$apply()
-			});			
+				console.log($rootScope.user)
+			});
 		};
 
 		//submits the message through socket IO whenever one is made
@@ -100,13 +118,19 @@ angular.module('services', [])
 			//since our socket only currently sends to people who did
 			//not brodcast we need to add the message to our messages array
 			messages.unshift({"user" : username, "message" : message, "userImage" : userImage})
-			socket.emit('newMessage', {"user" : username, "message" : message, "userImage" : userImage});
+
+			socket.emit('newMessage', {
+				"user" : username,
+				"message" : message,
+				"userImage" : userImage,
+				"room": videoId
+			});
 		}
 
 
 		return {
 			setupPlayer: setupPlayer,
 			submitMessage : submitMessage,
-			messages : messages,
+			messages : messages
 		};
 	})
