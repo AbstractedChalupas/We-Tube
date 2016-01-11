@@ -25,7 +25,7 @@ passport.serializeUser(function(user, done) {
 });
 
 
-//find using one proprety in the schema 
+//find using one proprety in the schema
 passport.deserializeUser(function(user, done) {
   // var userRecord = mongoose query for user based on obj
   // if error, then call done(err);
@@ -55,7 +55,7 @@ function (request, accessToken, refreshToken, profile, done) {
       }
       // if the record exists and is found, return it
       if (record) {
-        return done(null, record); 
+        return done(null, record);
       }
       else {
         record = {'id': profile.id, 'username': profile.name.givenName, 'email': profile.email, 'photo': profile.photos[0].value}
@@ -99,25 +99,33 @@ io.on('connection', function (socket) {
              'endSeconds': 60,
              'suggestedQuality': 'large'});
 
-  socket.on('createRoom', function(data){
-    rooms.push(data.room)
-    console.log("creating room", rooms)
+  socket.on('createRoom', function(data) {
+    rooms.push(data.room);
+    console.log("creating room", rooms);
+    //joining room
+    socket.join(data.room);
   })
 
+  socket.on('joinRoom', function(data) {
+    socket.join(data.room);
+  });
   //on hearing this event the server return sync data to all viewers
   socket.on('hostPlayerState', function (data) {
     console.log(data);
-    socket.broadcast.emit('hostPlayerSync', data)
+    io.to(data.room).emit('hostPlayerSync', data);
+    //socket.broadcast.emit('hostPlayerSync', data)
   });
 
   socket.on('newMessage', function (data) {
     console.log(data);
-    socket.broadcast.emit('newMessage', data)
+    io.to(data.room).emit('newMessage', data);
+    // socket.broadcast.emit('newMessage', data)
   });
 
   socket.on('clientPlayerStateChange', function(data) {
     console.log('client changed state!, server broadcast', data.stateChange);
-    socket.broadcast.emit('serverStateChange', data.stateChange);
+    io.to(data.room).emit('serverStateChange', data.stateChange);
+    // socket.broadcast.emit('serverStateChange', data.stateChange);
   });
 });
 
