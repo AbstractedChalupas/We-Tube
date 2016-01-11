@@ -1,5 +1,5 @@
 angular.module('stream', [])
-	.controller('StreamController', function ($scope, getVideo) {
+	.controller('StreamController', function ($scope, getVideo, $http) {
 		$scope.hello = "hello I'm a stream controller";
 		$scope.videoId = "";
 		$scope.startTime = 120;
@@ -14,6 +14,12 @@ angular.module('stream', [])
 			$scope.videoId += url[1] 
 			getVideo.setupPlayer($scope.videoId, true)			
 		};
+		$scope.logout = function() {
+			return $http({
+				method: "GET",
+				url:'/api/logout'
+			});
+		}
 
 		$scope.joinStream = function(videoId){
 			getVideo.setupPlayer(videoId, false)
