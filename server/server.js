@@ -120,9 +120,7 @@ app.get('/api/loggedin', function (req, res) {
 
 app.get('/api/logout', function (req, res) {
   req.logout();
-  // req.session.destroy(function(err){ 
-    res.redirect('/#stream');
-  // });
+  res.redirect('/#stream');
 })
 
 
