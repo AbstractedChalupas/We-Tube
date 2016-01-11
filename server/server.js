@@ -47,7 +47,7 @@ passport.use(new GoogleStrategy({
 },
 function (request, accessToken, refreshToken, profile, done) {
   process.nextTick(function() {
-    console.log(profile);
+    console.log(profile.photos[0].value);
     // check for users in database here, if the database doesnt have that user, add them as a usermodel in mongo
     User.findOne({'id':profile.id}, function (err, record){
       if (err){
@@ -58,7 +58,7 @@ function (request, accessToken, refreshToken, profile, done) {
         return done(null, record); 
       }
       else {
-        record = {'id': profile.id, 'username': profile.name.givenName, 'email': profile.email}
+        record = {'id': profile.id, 'username': profile.name.givenName, 'email': profile.email, 'photo': profile.photos[0].value}
         User.create(record, function (err, record) {
           if (err) {
             throw err;
