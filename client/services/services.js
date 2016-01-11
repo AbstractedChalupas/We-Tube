@@ -17,7 +17,7 @@ angular.module('services', [])
 		};
 	})
 
-	.factory('getVideo', function ($window, $interval) {
+	.factory('getVideo', function ($window, $interval, $rootScope) {
 		var onYoutubeStateChange = function() {
 			console.log('state change!')
 			socket.emit('clientPlayerStateChange', {stateChange: $window.youtubePlayer.getPlayerState()});
@@ -89,14 +89,17 @@ angular.module('services', [])
 			socket.on('newMessage', function(data) {
 				console.log("message Recieved", data)
 				messages.unshift({user : data.user, message : data.message})
+				$rootScope.$apply()
+				console.log($rootScope.user)
 			});			
 		};
 
 
 		$window.submitMessage = function(user, message){
 			console.log("Message submitted")
-			messages.unshift({"user" : user, "message" : message})
-			socket.emit('newMessage', {"user" : user, "message" : message});
+			var username = $rootScope.user.username
+			messages.unshift({"user" : username, "message" : message})
+			socket.emit('newMessage', {"user" : username, "message" : message});
 		}
 
 
