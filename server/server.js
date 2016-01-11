@@ -100,7 +100,7 @@ io.on('connection', function (socket) {
              'suggestedQuality': 'large'});
 
   socket.on('createRoom', function(data) {
-    rooms.push(data.room);
+    rooms.push({room : data.room, roomTitle : data.roomTitle});
     console.log("creating room", rooms);
     //joining room
     socket.join(data.room);
@@ -111,7 +111,7 @@ io.on('connection', function (socket) {
   });
   //on hearing this event the server return sync data to all viewers
   socket.on('hostPlayerState', function (data) {
-    console.log(data);
+    console.log(data.room, "hostPlayerSync");
     io.to(data.room).emit('hostPlayerSync', data);
     //socket.broadcast.emit('hostPlayerSync', data)
   });
