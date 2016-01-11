@@ -64,17 +64,7 @@ angular.module('services', [])
 			//sets up the socket stream and events
 			$window.socket = io.connect('http://localhost:8001');
 			if(host){
-
 				socket.emit('createRoom',{room : videoId});
-
-				$interval(function() {
-					//emits an event to the server
-					socket.emit('hostPlayerState', {
-						currentTime: $window.youtubePlayer.getCurrentTime(),
-						currentState: $window.youtubePlayer.getPlayerState(),
-						room: videoId
-					});
-				}, 1000);
 			}
 
 			//makes the viewers synch to the host whenever the host emits a time event
@@ -117,7 +107,6 @@ angular.module('services', [])
 			var userImage = $rootScope.user.photo
 			//since our socket only currently sends to people who did
 			//not brodcast we need to add the message to our messages array
-			messages.unshift({"user" : username, "message" : message, "userImage" : userImage})
 
 			socket.emit('newMessage', {
 				"user" : username,
