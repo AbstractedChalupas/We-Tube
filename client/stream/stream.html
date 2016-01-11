@@ -4,12 +4,16 @@
 		<button ng-click = "inRoom = !inRoom; submitUrl(url);">Submit</button>
 		<p ng-click = "inRoom = !inRoom; joinStream('U0315DUM6Cg')">Click me</p>
 		<a href='/api/logout'>Logout of Google</a>
-
 	</div>
+
 <!-- 	<div ng-if = "isUrl">
 		<iframe width="854" height="480" ng-src="{{embed}}" frameborder="0" allowfullscreen></iframe>
 	</div> -->
   <div id="player"></div>
+
+	<input class = "messanger" ng-model = "message"></input>
+	<p>{{message}}</p>
+  
   <script>
 
   </script>
