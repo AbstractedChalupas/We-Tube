@@ -23,8 +23,9 @@ angular.module('services', [])
 			socket.emit('clientPlayerStateChange', {stateChange: $window.youtubePlayer.getPlayerState()});
 		};
 
-		var host= false;
+		var host = false;
 		var videoId = '';
+		var messages = [];
 
 		var setupPlayer = function(source, isHost) {
 			videoId = source
@@ -49,38 +50,56 @@ angular.module('services', [])
 				events: {
 					'onStateChange': onYoutubeStateChange
 				}
-				});
+			});
 
-				//if possible make async at some point this and the above
-				$window.socket = io.connect('http://localhost:8001');
-				if(host){
-					$interval(function() {
-						socket.emit('hostPlayer', {	currentTime: $window.youtubePlayer.getCurrentTime(),
-																					currentState: $window.youtubePlayer.getPlayerState()
-						});
-					}, 1000);
+			//sets up the socket stream and events
+			$window.socket = io.connect('http://localhost:8001');
+			if(host){
+				$interval(function() {
+					//emits an event to the server
+					socket.emit('hostPlayerState', {	currentTime: $window.youtubePlayer.getCurrentTime(),
+																				currentState: $window.youtubePlayer.getPlayerState()
+					});
+				}, 1000);
+			}
+		
+			//makes the viewers synch to the host whenever the host emits a time event
+			//recieves this event from the server when the server hears the hostPlayerState
+			//even
+			if(!host){
+				socket.on("hostPlayerSync", function(data){
+					console.log(data)
+					$window.youtubePlayer.seekTo(data.currentTime)
+				})
+			}
+
+			socket.on('serverStateChange', function(data) {
+				console.log('server changed my state', data);
+				if (data === 2) {
+					$window.youtubePlayer.pauseVideo();
 				}
+				if (data === 1) {
+					$window.youtubePlayer.playVideo();
+				}
+			});
+			//all users should be listening for and sending messages
+			socket.on('newMessage', function(data) {
+				console.log("message Recieved", data)
+				messages.unshift({user : data.user, message : data.message})
+			});			
+		};
 
-				socket.on('serverStateChange', function(data) {
-					console.log('server changed my state', data);
-					if (data === 2) {
-						$window.youtubePlayer.pauseVideo();
-					}
-					if (data === 1) {
-						$window.youtubePlayer.playVideo();
-					}
-				});
 
-				if(!host){
-					socket.on("hostPlayerSync", function(data){
-						console.log(data)
-						$window.youtubePlayer.seekTo(data.currentTime)
-					})
-				}			
-			};
+		$window.submitMessage = function(user, message){
+			console.log("Message submitted")
+			messages.unshift({"user" : user, "message" : message})
+			socket.emit('newMessage', {"user" : user, "message" : message});
+		}
 
 
 		return {
 			setupPlayer: setupPlayer,
+			submitMessage : submitMessage,
+			messages : messages,
 		};
 	})

@@ -6,13 +6,15 @@
 		<a href='/api/logout'>Logout of Google</a>
 	</div>
 
-<!-- 	<div ng-if = "isUrl">
-		<iframe width="854" height="480" ng-src="{{embed}}" frameborder="0" allowfullscreen></iframe>
-	</div> -->
+	<!-- where the player gets attached to the DOM -->
   <div id="player"></div>
 
-	<input class = "messanger" ng-model = "message"></input>
-	<p>{{message}}</p>
+	<div ng-show = "inRoom">
+		<h4>Messanger</h4>
+		<input class = "messanger" ng-model = "message" ng-keyup="submitMessage($event.keyCode)"></input>
+
+		<p ng-repeat = "message in messages">{{message.user}} says: {{message.message}}</p>
+	</div>
   
   <script>
 

@@ -94,19 +94,20 @@ app.use(express.static(__dirname+"/../client"));
 io.on('connection', function (socket) {
   var connectedClients = [];
   connectedClients.push(socket);
-  //console.log('client connected', connectedClients);
-  // socket.emit('playerDetails', {'videoId': 'TRrL5j3MIvo',
-  //              'startSeconds': 5,
-  //              'endSeconds': 60,
-  //              'suggestedQuality': 'large'});
   socket.emit('playerDetails', {'videoId': 'TRrL5j3MIvo',
              'startSeconds': 5,
              'endSeconds': 60,
              'suggestedQuality': 'large'});
-  
-  socket.on('hostPlayer', function (data) {
+
+  //on hearing this event the server return sync data to all viewers
+  socket.on('hostPlayerState', function (data) {
     console.log(data);
     socket.broadcast.emit('hostPlayerSync', data)
+  });
+
+  socket.on('newMessage', function (data) {
+    console.log(data);
+    socket.broadcast.emit('newMessage', data)
   });
 
   socket.on('clientPlayerStateChange', function(data) {
