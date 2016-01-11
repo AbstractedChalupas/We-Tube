@@ -1,15 +1,26 @@
 <div>
-	<div ng-show = "!inRoom">
+	<div ng-init = "getRooms()" ng-show = "!inRoom">
 		<input ng-model = "url"></input>
 		<button ng-click = "inRoom = !inRoom; submitUrl(url);">Submit</button>
+<<<<<<< HEAD
 		<p ng-click = "inRoom = !inRoom; joinStream('U0315DUM6Cg')">Click me</p>
 		<a href='/api/logout'>Logout of Google</a>
+=======
+		<p ng-repeat = "room in rooms" ng-click = "$parent.inRoom = !$parent.inRoom; joinStream(room)">{{room}} Click me</p>
 
+>>>>>>> added ability to add rooms to server, and list on client, still need to be able to navigate to different rooms
 	</div>
-<!-- 	<div ng-if = "isUrl">
-		<iframe width="854" height="480" ng-src="{{embed}}" frameborder="0" allowfullscreen></iframe>
-	</div> -->
+
+	<!-- where the player getts -->
   <div id="player"></div>
+
+	<div ng-show = "inRoom">
+
+		<input class = "messanger" ng-model = "message" ng-keyup="submitMessage($event.keyCode)"></input>
+
+		<p ng-repeat = "message in messages">{{message.user}} says: {{message.message}}</p>
+	</div>
+  
   <script>
 
   </script>
