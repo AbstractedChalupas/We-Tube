@@ -2,9 +2,10 @@ angular.module('stream', [])
 	.controller('StreamController', function ($scope, $http, getVideo) {
 		$scope.videoId = "";
 		$scope.startTime = 120;
+		//set messages to the factory array of messages since that is where
+		//they are kept updated
 		$scope.messages = getVideo.messages;
 		$scope.rooms = [];
-		// [{user:"Bob", message: "hello"}]
 
 		$scope.clearUrl = function(){
 			$scope.url = ''

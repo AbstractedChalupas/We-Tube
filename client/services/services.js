@@ -1,8 +1,3 @@
-// <<<<<<< 74ec409484f43f9ca920decf110e7dac504c48bd
-// app.factory('getVideo', function getVideo(url){
-
-// })
-// =======
 angular.module('services', [])
 	.factory('OAuth', function ($http) {
 		var googleLogin = function (data) {
@@ -18,15 +13,24 @@ angular.module('services', [])
 	})
 
 	.factory('getVideo', function ($window, $interval, $rootScope) {
+
 		var onYoutubeStateChange = function() {
 			console.log('state change!')
 			socket.emit('clientPlayerStateChange', {stateChange: $window.youtubePlayer.getPlayerState()});
+			if(host){
+				socket.emit('hostPlayerState', 
+				{
+					currentTime: $window.youtubePlayer.getCurrentTime(),
+					currentState: $window.youtubePlayer.getPlayerState()					
+				});
+			}
 		};
 
 		var host = false;
 		var videoId = '';
 		var messages = [];
 
+		//at the end of setupPlayer onYouTubeIframeAPIReady is automatically called
 		var setupPlayer = function(source, isHost) {
 			videoId = source
 			host = isHost;
@@ -40,7 +44,6 @@ angular.module('services', [])
 		};
 		//updated by setupPlayer b/c setupPlayer cannot directly pass into
 		//onYouTubeIframeAPIReady
-		
 		$window.onYouTubeIframeAPIReady=function() {
 			console.log('youtube iFrame ready!');
 			$window.youtubePlayer = new YT.Player('player', {
@@ -55,15 +58,8 @@ angular.module('services', [])
 			//sets up the socket stream and events
 			$window.socket = io.connect('http://localhost:8001');
 			if(host){
-				
+				//creates the room if they are the host
 				socket.emit('createRoom',{room : videoId})
-
-				$interval(function() {
-					//emits an event to the server
-					socket.emit('hostPlayerState', {	currentTime: $window.youtubePlayer.getCurrentTime(),
-																				currentState: $window.youtubePlayer.getPlayerState()
-					});
-				}, 1000);
 			}
 		
 			//makes the viewers synch to the host whenever the host emits a time event
@@ -88,18 +84,23 @@ angular.module('services', [])
 			//all users should be listening for and sending messages
 			socket.on('newMessage', function(data) {
 				console.log("message Recieved", data)
-				messages.unshift({user : data.user, message : data.message})
+				messages.unshift({user : data.user, message : data.message, "userImage" : data.userImage})
+				//force the scope to update, solved a strange error where
+				//viewer messages weren't updating
 				$rootScope.$apply()
-				console.log($rootScope.user)
 			});			
 		};
 
-
+		//submits the message through socket IO whenever one is made
 		$window.submitMessage = function(user, message){
 			console.log("Message submitted")
+			//grabs the username from Google account
 			var username = $rootScope.user.username
-			messages.unshift({"user" : username, "message" : message})
-			socket.emit('newMessage', {"user" : username, "message" : message});
+			var userImage = $rootScope.user.photo
+			//since our socket only currently sends to people who did
+			//not brodcast we need to add the message to our messages array
+			messages.unshift({"user" : username, "message" : message, "userImage" : userImage})
+			socket.emit('newMessage', {"user" : username, "message" : message, "userImage" : userImage});
 		}
 
 
