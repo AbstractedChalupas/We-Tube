@@ -8,14 +8,21 @@ var passport = require('passport');
 var session = require('express-session')
 var User = require('../DB/users/userModel')
 
+
+// Config
+
+// use sessions to store login
 app.use(session({secret: "abstractedChalupas", cookie: {}, resave: false, saveUninitialized: false }));
+// use cors to send requests to google
 app.use(cors());
+// use passport
 app.use( passport.initialize());
+// store passport authentication in the session
 app.use( passport.session());
 
 app.use(express.static(__dirname+"/../client"));
 
-// Connect to a database called we-tube
+// Connect to a Mongo database called we-tube
 mongoose.connect('mongodb://localhost/we-tube');
 
 // "1082022701969-rdl6108k798kf2apth302dcuornld9pg.apps.googleusercontent.com"
@@ -26,7 +33,7 @@ var GOOGLE_CLIENT_ID = "1082022701969-rdl6108k798kf2apth302dcuornld9pg";
 var GOOGLE_CLIENT_SECRET = "rf5SxZAdcpha9sNXcN-QD3uq";
 var rooms = [];
 
-// identify which property defines user. this is the users google id which is a number
+// identify which property defines user. this is the users google profile id
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
@@ -36,7 +43,7 @@ passport.serializeUser(function(user, done) {
 passport.deserializeUser(function(user, done) {
   // var userRecord = mongoose query for user based on obj
   // if error, then call done(err);
-  //obj should be the user record plucked from database
+  // obj should be the user record plucked from database
   User.findOne({'id': user},function(err, record) {
     if (err) {
       return err;
@@ -51,10 +58,9 @@ passport.use(new GoogleStrategy({
   clientSecret: GOOGLE_CLIENT_SECRET,
   callbackURL: "http://127.0.0.1:8001/auth/google/callback",
   passReqtoCallback: true
-},
-function (request, accessToken, refreshToken, profile, done) {
+  },
+  function (request, accessToken, refreshToken, profile, done) {
   process.nextTick(function() {
-    console.log(profile.photos[0].value);
     // check for users in database here, if the database doesnt have that user, add them as a usermodel in mongo
     User.findOne({'id':profile.id}, function (err, record){
       if (err){
@@ -65,24 +71,25 @@ function (request, accessToken, refreshToken, profile, done) {
         return done(null, record);
       }
       else {
+        // if the user record does not exist, add them to the database!
         record = {'id': profile.id, 'username': profile.name.givenName, 'email': profile.email, 'photo': profile.photos[0].value}
         User.create(record, function (err, record) {
           if (err) {
             throw err;
           }
+          // After successfully adding the use, return the created user record
           return done(null, record);
         })
       }
     });
   });
-}
+  }
 ));
 
-
+// API Routes
 app.get('/api/loggedin', function (req, res) {
   var auth = req.isAuthenticated();
   if (auth) {
-    console.log(req.user)
     res.send(req.user);
   }
   else
@@ -125,7 +132,7 @@ io.on('connection', function (socket) {
 
   socket.on('createRoom', function(data) {
     rooms.push({room : data.room, roomTitle : data.roomTitle});
-    console.log("creating room", rooms);
+    // console.log("creating room", rooms);
     //joining room
     socket.join(data.room);
   })
@@ -136,19 +143,19 @@ io.on('connection', function (socket) {
   });
   //on hearing this event the server return sync data to all viewers
   socket.on('hostPlayerState', function (data) {
-    console.log(data.room, "hostPlayerSync");
+    // console.log(data.room, "hostPlayerSync");
     io.to(data.room).emit('hostPlayerSync', data);
     //socket.broadcast.emit('hostPlayerSync', data)
   });
 
   socket.on('newMessage', function (data) {
-    console.log(data);
+    // console.log(data);
     io.to(data.room).emit('newMessage', data);
     // socket.broadcast.emit('newMessage', data)
   });
 
   socket.on('clientPlayerStateChange', function(data) {
-    console.log('client changed state!, server broadcast', data.stateChange);
+    // console.log('client changed state!, server broadcast', data.stateChange);
     io.to(data.room).emit('serverStateChange', data.stateChange);
     // socket.broadcast.emit('serverStateChange', data.stateChange);
   });
