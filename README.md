@@ -1,15 +1,15 @@
 # We-Tube
-We-Tube is a video syncing service for YouTube videos that allows users to watch the same video simultaneously and chat about their thoughts. The videos are synced so that each user is watching as if the video is a live stream. Each user can play/pause the video, but only the host of the video can seek to a new location in the video. New users are able to join the stream at any point and they will watch from wherever other viewers were watching the video. 
+We-Tube is a video syncing service for YouTube videos that allows users to watch the same video simultaneously and chat about their thoughts. The videos are synced so that each user is watching as if the video is a live stream. Each user can play/pause the video, but only the host of the video can seek to a new location in the video. New users are able to join the stream at any point and they will watch from wherever other viewers were watching the video.
 
 The application is available [here](http://www.abstractedchalupas.xyz:8001)
 
-A Diagram explaining how the clients and server communicate to sync video is available in this directory. 
+A Diagram explaining how the clients and server communicate to sync video is available in this directory.
 
 #APIs Used
-We used the Passport API to provide Google Authentication and log in functionality for the App. We used the Youtube API to gather details about the videos being watched (but not to embed the video into the screen). 
+We used the Passport API to provide Google Authentication and log in functionality for the App. We used the Youtube API to gather details about the videos being watched (but not to embed the video into the screen).
 
 #Styling
-Styling was done using Google's Material Design guidelines and theme. We used Angular-Material to quickly integrate Google Material Design elements into our app. 
+Styling was done using Google's Material Design guidelines and theme. We used Angular-Material to quickly integrate Google Material Design elements into our app.
 
 #Database
 We used MongoDB for our database. Initially, we were planning on users being able to have friends and a history of watched videos (able to stored as arrays, so it made a lot of sense to use Mongo. In the end, the database mainly stored user data to help with authentication and to deliver a more customized experience (Google profile used for chat). The schema for our database is as follows.
@@ -58,5 +58,16 @@ Client Side Routes | Function
 
 
 #Testing
-A range of basic client side testing was performed to check that front-end routing was working as specified and the type of data we were receiving and handling with our controllers was consistent. 
+A range of basic client side testing was performed to check that front-end routing was working as specified and the type of data we were receiving and handling with our controllers was consistent.
 
+#Socket Sequence Diagrams
+
+![ScreenShot](/docs/We-TubeDiagram.jpg)
+
+![ScreenShot](/docs/createRoom.png)
+
+![ScreenShot](/docs/joinRoom.png)
+
+![ScreenShot](/docs/playerStateChange.png)
+
+![ScreenShot](/docs/messages.png)
