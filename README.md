@@ -12,6 +12,7 @@ Styling was done using Google's Material Design guidelines and theme. We used An
 #Database
 We used MongoDB for our database. Initially, we were planning on users being able to have friends and a history of watched videos (able to stored as arrays, so it made a lot of sense to use Mongo. In the end, the database mainly stored user data to help with authentication and to deliver a more customized experience (Google profile used for chat). The schema for our database is as follows.
 '''
+
 var UserSchema = new mongoose.Schema({
 	id: {
 		type: Number,
@@ -32,12 +33,12 @@ var UserSchema = new mongoose.Schema({
 		type: Array,
 		required: false,
 	},
-
 	history: {
 		type: Array,
 		required: false
 	}
 })
+
 '''
 
 #Routing
