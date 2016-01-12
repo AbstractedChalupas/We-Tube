@@ -71,7 +71,9 @@ angular.module('services', [])
 			if(host){
 				var videoTitle = $window.youtubePlayer.getVideoData().title
 				socket.emit('createRoom',{room : videoId, roomTitle : videoTitle});
+				
 				socket.on('newViewer', function(data){
+					if($window.youtubePlayer.getCurrentTime() > 0)
 					socket.emit('hostPlayerState',
 					{
 						currentTime: $window.youtubePlayer.getCurrentTime(),
