@@ -62,7 +62,7 @@ A range of basic client side testing was performed to check that front-end routi
 
 #Socket Sequence Diagrams
 
-![ScreenShot](/docs/We-tubeDiagram.png)
+![ScreenShot](/docs/We-tubeDiagram.jpg)
 
 ![ScreenShot](/docs/createRoom.png)
 
