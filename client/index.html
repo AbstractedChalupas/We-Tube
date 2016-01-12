@@ -1,11 +1,24 @@
 <!DOCTYPE html>
 <html ng-app = "app">
 <head>
+	<link rel="stylesheet" href="lib/angular-material/angular-material.css">
+	<link rel="stylesheet" href="lib/angular-material/angular-material.layouts.css">
+	<link rel='stylesheet' href='styles/styles.css'
 	<meta charset="utf-8">
 	<title>Greenfield</title>
 </head>
 <body>
-	<h1>Greenfield</h1>
+  <md-content>
+    <md-toolbar>
+    	<div class="md-toolbar-tools">
+            <h1>
+              <span>We-Tube</span>
+            </h1>
+            <span flex></span>
+      </div>
+    </md-toolbar>
+  </md-content>
+
 	<div ng-view></div>
 	<div ng-controller = 'appController'></div>
 
@@ -14,6 +27,15 @@
 	<script src = "lib/angular-route/angular-route.js"></script>
 	<script src = "http://localhost:8001/socket.io/socket.io.js"></script>
 	<script src = "lib/angular-route/angular-route.js"></script>
+
+	<!-- angular material dependencies -->
+	<script src = "lib/angular-animate/angular-animate.js"></script>
+	<script src = "lib/angular-aria/angular-aria.js"></script>
+	<script src = "lib/angular-messages/angular-messages.js"></script>
+
+	<!-- Angular material -->
+	<script src = "lib/angular-material/angular-material.js"></script>
+
 
 	<!-- app scripts -->
 	<script src = "app.js"></script>
