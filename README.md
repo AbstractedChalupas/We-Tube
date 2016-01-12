@@ -1,6 +1,8 @@
 # We-Tube
 We-Tube is a video syncing service for YouTube videos that allows users to watch the same video simultaneously and chat about their thoughts. The videos are synced so that each user is watching as if the video is a live stream. Each user can play/pause the video, but only the host of the video can seek to a new location in the video. New users are able to join the stream at any point and they will watch from wherever other viewers were watching the video. 
 
+The application is available [here](http://www.abstractedchalupas.xyz:8001)
+
 A Diagram explaining how the clients and server communicate to sync video is available in this directory. 
 
 #APIs Used
@@ -38,8 +40,10 @@ We used MongoDB for our database. Initially, we were planning on users being abl
   		}
   	})
 
+We used Mongoose as the ORM to handle all data. We do not have a controller for the Mongoose model at the moment since we are only performing one operation per log in, however that is a possible way to refactor (and to add more use to the database).
+
 #Routing
-Server Side API routes | Function
+Server Side API Routes | Function
 ----------------------|---------
 /api/loggedin| GET request to determine whether not a user has been authenticated with Google
 /api/logout | GET request which removes the token to log a user out. This does not log the user out of their Google Account however.
@@ -47,7 +51,7 @@ Server Side API routes | Function
 /auth/google/callback| GET request for the callback which will redirect the user either to the /#stream route on a successful authentication or the /#login route on a failed authentication
 
 
-Client Side Routing | Function
+Client Side Routes | Function
 --------------------|----------
 /| Basic static login page. User can log in with Google.
 /#stream | Static video page. User can select videos from the available rooms on this page or create a room by pasting a youtube link into the text input field. The video will display on this page as well. To view all available streams, the user can refresh the page. A chat will load at the bottom for each video (Although messages do not persist).
