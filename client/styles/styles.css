@@ -12,3 +12,64 @@ md-card {
   margin-left:10%;
   margin-right: 10%; 
 }
+.stream {
+	margin-left: 10%;
+	margin-right: 10%;
+	text-align: center;
+	border-radius: 5px;
+	background-color: #d0d0d0;
+}
+
+.md-list-item-text{
+	border-radius: 5px;
+	min-height : 60px;
+	background-color: #5c6bc0;
+	padding:0 0 0 0;
+}
+
+md-list{
+	background-color: #eee;
+	border-radius: 5px;
+	padding:0 0 0 0;
+}
+
+.urlInput{
+	margin-top: 10px;
+	margin-left: 40%;
+	border-radius: 5px;
+	
+}
+
+.logout{
+	float:right;
+	display:block;
+}
+
+.messager{
+	width : 70%;
+	margin-left: 15%;
+	margin-right: 15%
+}
+
+.message{
+	color:#fff;
+}
+
+.messageBox {
+  height: 200px;
+  overflow: scroll;
+}
+#playerBox{
+	background-color: black;
+	width: 100%;
+	height: 80%;
+}
+#player{
+	margin-left: 20%;
+	margin-right: 20%
+}
+iframe{
+
+	background-color: black;
+
+}
