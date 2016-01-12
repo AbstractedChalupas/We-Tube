@@ -16,6 +16,7 @@ app.config(function($routeProvider, $sceDelegateProvider){
        return deferred.promise;
      };
 
+  //routes the user to the main room that controlls everything so far
 	$routeProvider
 		.when("/stream", {
 			templateUrl: "stream/stream.html",
@@ -24,10 +25,12 @@ app.config(function($routeProvider, $sceDelegateProvider){
          loggedin: checkLoggedin
        }
 		})
+    //sends the user to the login page if not already logged in
 		.when("/", {
 			templateUrl: "auth/login.html",
 			controller: "AuthController"
 		})
+    //redirects to login page for any other search
 		.otherwise({
 			redirectTo: '/'
 		})
