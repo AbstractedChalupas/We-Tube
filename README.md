@@ -61,9 +61,9 @@ Client Side Routes | Function
 A range of basic client side testing was performed to check that front-end routing was working as specified and the type of data we were receiving and handling with our controllers was consistent.
 
 #Socket Sequence Diagrams
-![alt tag](https://github.com/AbstractedChalupas/AbstractedChalupas/docs/createRoom.png)
+![ScreenShot](/docs/createRoom.png)
 
-![alt tag](https://github.com/AbstractedChalupas/AbstractedChalupas/docs/joinRoom.png)
+![ScreenShot](/docs/joinRoom.png)
 
 ![alt tag](https://github.com/AbstractedChalupas/AbstractedChalupas/docs/playerStateChange.png)
 
