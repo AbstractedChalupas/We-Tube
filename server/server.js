@@ -9,7 +9,14 @@ var session = require('express-session')
 var User = require('../DB/users/userModel')
 
 app.use(session({secret: "abstractedChalupas", cookie: {}, resave: false, saveUninitialized: false }));
+app.use(cors());
+app.use( passport.initialize());
+app.use( passport.session());
 
+app.use(express.static(__dirname+"/../client"));
+
+// Connect to a database called we-tube
+mongoose.connect('mongodb://localhost/we-tube');
 
 // "1082022701969-rdl6108k798kf2apth302dcuornld9pg.apps.googleusercontent.com"
 
@@ -70,26 +77,43 @@ function (request, accessToken, refreshToken, profile, done) {
   });
 }
 ));
-app.use(cors());
-
-app.use( passport.initialize());
-app.use( passport.session());
 
 
+app.get('/api/loggedin', function (req, res) {
+  var auth = req.isAuthenticated();
+  if (auth) {
+    console.log(req.user)
+    res.send(req.user);
+  }
+  else
+    res.send('0');
+})
+
+app.get('/api/logout', function (req, res) {
+  req.logout();
+  res.redirect('/#stream');
+})
 
 
-// Connect to a database called we-tube
-mongoose.connect('mongodb://localhost/we-tube')
-;
+app.get('/auth/google', passport.authenticate('google', {scope: [
+        'https://www.googleapis.com/auth/plus.login',
+        'https://www.googleapis.com/auth/plus.profile.emails.read']
+}));
+
+app.get('/streams/rooms', function(req, res){
+  res.send(rooms)
+})
+
+app.get('/auth/google/callback',
+        passport.authenticate( 'google', {
+          successRedirect: '/#/stream',
+          failureRedirect: '/#/login'
+}));
+
+
 var PORT = 8001;
 
 var io = require('socket.io').listen(app.listen(PORT));
-
-
-
-
-
-app.use(express.static(__dirname+"/../client"));
 
 io.on('connection', function (socket) {
   var connectedClients = [];
@@ -130,50 +154,7 @@ io.on('connection', function (socket) {
   });
 });
 
-app.get('/api/loggedin', function (req, res) {
-  var auth = req.isAuthenticated();
-  if (auth) {
-    console.log(req.user)
-    res.send(req.user);
-  }
-  else
-    res.send('0');
-})
 
-app.get('/api/logout', function (req, res) {
-  req.logout();
-  res.redirect('/#stream');
-})
-
-
-// app.get('/api/logout', function (req, res) {
-//   app.use(cors());
-//   res.redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:8001');
-// })
-
-app.get('/auth/google', passport.authenticate('google', {scope: [
-        'https://www.googleapis.com/auth/plus.login',
-        'https://www.googleapis.com/auth/plus.profile.emails.read']
-}));
-
-app.get('/streams/rooms', function(req, res){
-  res.send(rooms)
-})
-
-app.get('/auth/google/callback',
-        passport.authenticate( 'google', {
-          successRedirect: '/#/stream',
-          failureRedirect: '/#/login'
-}));
-
-// var checkUser = function (req, res, next) {
-//   if (req.isAuthenticated()){
-//     next();
-//   }
-//   else {
-//     res.redirect('/#login');
-//   }
-// };
 
 
 module.exports = app;
