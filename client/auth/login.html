@@ -1,16 +1,15 @@
-<div > 
-  <div md-content >
-    <div flex="50" flex-sm="75" flex-xs="75">
-      <md-card layout='column' layout-align ='center center'>
-        <md-card-title>
+<div> 
+  <div md-content  layout-align='center center'>
+    <div flex-sm="50" flex-xs="50" layout='row'layout-align ='center center'>
+      <md-card >
+        <md-card-title layout-align ='space-between center'>
           <md-card-title-text>
-            <span class="md-headline">Sign in with Google</span>
-            <!-- <span class="md-subhead">Large</span> -->
+            <span class="md-headline" >Sign in with Google</span>
           </md-card-title-text>
         </md-card-title>
-          <md-button class="md-raised md-primary" ng-href='/auth/google' flex ='25'>
+        <md-button class="md-raised md-primary" ng-href='/auth/google'>
             Sign In
-          </md-button>
+        </md-button>
       </md-card>
     </div>
   </div>
