@@ -11,31 +11,47 @@
       </div>
     </md-toolbar>
 </md-content>
+
 <div>
 	<div ng-init = "getRooms()" ng-show = "!inRoom">
 		<input ng-model = "url"></input>
 		<button ng-click = "inRoom = !inRoom; submitUrl(url);">Submit</button>
-		<p ng-repeat = "room in rooms" ng-click = "$parent.inRoom = !$parent.inRoom; joinStream(room.room)">{{room.roomTitle}} No! Click me</p>
+		<p class = "stream" ng-repeat = "room in rooms" ng-click = "$parent.inRoom = !$parent.inRoom; joinStream(room.room)">{{room.roomTitle}} Click here to join!</p>
 	</div>
 
 	<!-- where the player gets added -->
-  <div id="player"></div>
+  <div id="playerBox">
+  	<div id="player"></div>
+  </div>
 
 	<!-- where the messager goes when we're in room -->
 	<div ng-show = "inRoom">
+		<h5 class = "messager"> Enter messages below</h5>
+		<input class = "messager" ng-model = "message" ng-keyup="submitMessage($event.keyCode)"></input>
+		<div class = "messageBox">
 
-		<input class = "messanger" ng-model = "message" ng-keyup="submitMessage($event.keyCode)"></input>
 
-		<div ng-repeat = "message in messages">
-
-			<span>
-				<img ng-src="{{message.userImage}}"></img>
-			</span>
-
-			<span>
-				{{message.user}} says: {{message.message}}
-			</span>
+			<md-content>
+		    <md-list>
+		      <md-list-item class="md-3-line" ng-repeat="message in messages">
+		        <div class="md-list-item-text" layout="row">
+							<span>
+								<img ng-src="{{message.userImage}}"class="md-avatar"></img>
+							</span>
+							<span layout = "column" class = "message">
+								<p>
+									{{message.user}} says:
+								</p>
+								<h4>
+									{{message.message}}
+								</h4> 
+							</span>
+		        </div>
+		      </md-list-item>
+		    </md-list>
+      </md-content>      
 		</div>
+
 	</div>
 	  
   <script>
