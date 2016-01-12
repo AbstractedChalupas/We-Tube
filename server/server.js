@@ -108,6 +108,7 @@ io.on('connection', function (socket) {
 
   socket.on('joinRoom', function(data) {
     socket.join(data.room);
+    io.to(data.room).emit('newViewer', data);
   });
   //on hearing this event the server return sync data to all viewers
   socket.on('hostPlayerState', function (data) {
