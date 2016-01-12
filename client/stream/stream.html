@@ -4,17 +4,18 @@
             <h1>
               <span>We-Tube</span>
             </h1>
+            <span flex></span>
+            <h3>Welcome {{user}}</h3>
             <md-button class="md-icon-button" aria-label="Settings" ng-href = '/api/logout'>
               <img class="png-icon" src="/../styles/ic_exit_to_app_black_24dp_2x.png" style="width: 24px; height: 24px;">
             </md-button>
-            <span flex></span>
       </div>
     </md-toolbar>
 </md-content>
 
 <div>
 	<div ng-init = "getRooms()" ng-show = "!inRoom">
-		<input ng-model = "url"></input>
+		<input class = "urlInput" ng-model = "url" placeholder = "Enter a Youtube Link"></input>
 		<button ng-click = "inRoom = !inRoom; submitUrl(url);">Submit</button>
 		<p class = "stream" ng-repeat = "room in rooms" ng-click = "$parent.inRoom = !$parent.inRoom; joinStream(room.room)">{{room.roomTitle}} Click here to join!</p>
 	</div>

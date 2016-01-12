@@ -1,11 +1,13 @@
 angular.module('stream', [])
-	.controller('StreamController', function ($scope, $http, getVideo) {
+	.controller('StreamController', function ($scope, $http, $rootScope, getVideo) {
 		$scope.videoId = "";
 		$scope.startTime = 120;
 		//set messages to the factory array of messages since that is where
 		//they are kept updated
 		$scope.messages = getVideo.messages;
 		$scope.rooms = [];
+		$scope.user = $rootScope.user.username
+
 
 		$scope.clearUrl = function(){
 			$scope.url = ''
@@ -30,7 +32,6 @@ angular.module('stream', [])
 			$scope.videoId += url[1] 
 			//pass in true since they are the host
 			getVideo.setupPlayer($scope.videoId, true)			
-			$scope.user = "Bob"
 		};
 		$scope.logout = function() {
 			return $http({
@@ -42,7 +43,6 @@ angular.module('stream', [])
 		$scope.joinStream = function(videoId){
 			//pass in false since they are a viewer
 			getVideo.setupPlayer(videoId, false)
-			$scope.user = "Not Bob"
 		}
 
 		$scope.submitMessage = function(keyCode){

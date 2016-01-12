@@ -33,6 +33,13 @@ md-list{
 	padding:0 0 0 0;
 }
 
+.urlInput{
+	margin-top: 10px;
+	margin-left: 40%;
+	border-radius: 5px;
+	
+}
+
 .logout{
 	float:right;
 	display:block;
